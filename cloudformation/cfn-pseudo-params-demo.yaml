@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This CFN template has demonstration of Mappings
+
+Mappings:
+  RegionToAMIMap:
+    us-east-1:
+      ImageId: ami-087c17d1fe0178315
+    us-east-2: 
+      ImageId: ami-00dfe2c7ce89a450b
+  
+  RegionToKeyMap:
+    us-east-1:
+      keyname: EC2_KeyPair
+    us-east-2: 
+      keyname: EC_WEB_Ohio
+      
+Resources:
+  labEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: !FindInMap [RegionToAMIMap,!Ref 'AWS::Region',ImageId]
+      KeyName: !FindInMap [RegionToKeyMap,!Ref 'AWS::Region',keyname]

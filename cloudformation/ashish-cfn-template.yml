@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This will create EC2 and SG and associate EC2 with SG.
+ 
+Parameters:
+  keyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Specify the KeyPair Name
+ 
+Resources:
+  initEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 'ami-00dfe2c7ce89a450b'
+      InstanceType: t2.micro
+      KeyName: !Ref keyPairName
+      SecurityGroups:
+        - !Ref initSshSG
+      Tags:
+        - Key: Name
+          Value: CFN_EC2
+ 
+  initSshSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: CFN_SG
+      GroupDescription: 'This will create SSH(22) and RDP(3389) SG with source 0.0.0.0/0'
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          ToPort: 22
+          IpProtocol: tcp
+        - CidrIp: 0.0.0.0/0
+          FromPort: 3389
+          ToPort: 3389
+          IpProtocol: tcp
+        - CidrIp: 0.0.0.0/0
+          FromPort: 3390
+          ToPort: 3390
+          IpProtocol: tcp
+      Tags:
+        - Key: Name
+          Value: CFN_SG

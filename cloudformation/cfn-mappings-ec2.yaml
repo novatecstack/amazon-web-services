@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This CFN template has demonstration of Mappings
+
+Parameters:
+  EnvType:
+    Type: String
+    AllowedValues:
+      - "Development"
+      - "Production"
+
+Mappings:
+  EnvToInstanceTypeMap:
+    Development:
+      instanceType: t2.micro
+    Production:
+      instanceType: t3.medium
+
+Resources:
+  labEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-00dfe2c7ce89a450b
+      InstanceType: !FindInMap [EnvToInstanceTypeMap,!Ref EnvType,instanceType]
+      KeyName: EC_WEB_Ohio

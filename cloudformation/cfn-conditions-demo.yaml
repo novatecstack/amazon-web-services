@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This CFN template has demonstration of Conditions section
+
+Parameters:
+  EnvType:
+    Type: String
+    Default: Development
+    AllowedValues:
+      - "Development"
+      - "Production"    
+
+Conditions:
+  displayOuput: !Equals [!Ref EnvType, Development]
+
+Resources:
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    # Description: This SG will control the SSH (22) traffic for all the EC2 instances
+    Properties:
+      GroupDescription: Sample SG
+      GroupName: CFN_SSH_SG
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          FromPort: 3389
+          IpProtocol: tcp
+          ToPort: 3389
+      Tags:
+        - Key: Name
+          Value: CFN_SSH_SG
+
+Outputs:
+  SGName:
+    Value: !Ref SSHSecurityGroup
+    Condition: displayOuput

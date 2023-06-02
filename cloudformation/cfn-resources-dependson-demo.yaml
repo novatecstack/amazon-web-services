@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This CFN template demonstrate the Dependson function
+
+Resources:
+  labS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: lab-dependson-resource-bucket
+    DependsOn: labEC2Instance
+    
+  labEC2Instance:
+    Type: AWS::EC2::Instance
+    Description: Demo Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-00dfe2c7ce89a450b
+      KeyName: EC_WEB_Ohio

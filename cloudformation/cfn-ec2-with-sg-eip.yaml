@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This CFN template will provision EC2 with Security group and Elastic IP
+
+Parameters:
+  KeyNameParam:
+    Type: String
+    Description: Key Pair
+
+  # You can parameterize EC2 instance type, ImageID, Server Name
+
+Resources:
+  labEC2Instance:
+    Type: AWS::EC2::Instance
+    # Description: This is our lab EC2 instance
+    Properties:
+      ImageId: ami-00dfe2c7ce89a450b
+      KeyName: !Ref KeyNameParam
+      InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref SSHSecurityGroup
+      Tags:
+        - Key: Name
+          Value: labDemoServer
+
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    # Description: This SG will control the SSH (22) traffic for all the EC2 instances
+    Properties:
+      GroupDescription: Sample SG
+      GroupName: CFN_SSH_SG
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          FromPort: 3389
+          IpProtocol: tcp
+          ToPort: 3389
+      Tags:
+        - Key: Name
+          Value: CFN_SSH_SG
+  
+  labEIP:
+    Type: AWS::EC2::EIP
+    # Description: This EIP is associated with the Web Server
+    Properties:
+      InstanceId: !Ref labEC2Instance
