@@ -1,8 +1,11 @@
+# Description: This is a sample aws lambda function handler for listing all the lambda functions in current region
+# Author: Novatec
+
 import boto3
 
-# Note: It's always preferable to define your boto3 outside of your functions
+# create a service client object before making callout to the member functions
 client = boto3.client('lambda')
 
-def hello(event, context):
-    response = client.list_functions()
-    return response
+def lambda_handler(event, context):
+  response = client.list_functions()
+  return response
